@@ -35,15 +35,24 @@ async def background_poller() -> None:
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Start background poller automatically when the app starts
-    poller_task = asyncio.create_task(background_poller())
-    yield
-    # Clean shutdown when the app stops
-    poller_task.cancel()
-    try:
-        await poller_task
-    except asyncio.CancelledError:
-        pass
+    if settings.enable_auto_poller:
+        logger.info(
+            "Automatic background inbox poller is ENABLED (interval: %ss)",
+            settings.poll_interval_seconds,
+        )
+        poller_task = asyncio.create_task(background_poller())
+        yield
+        poller_task.cancel()
+        try:
+            await poller_task
+        except asyncio.CancelledError:
+            pass
+    else:
+        logger.info(
+            "Automatic background inbox poller is DISABLED (ENABLE_AUTO_POLLER=false). "
+            "Emails will only be checked when 'Check inbox now' is clicked in the dashboard."
+        )
+        yield
 
 
 app = FastAPI(title="Neem & Teak Customer Support", lifespan=lifespan)

@@ -20,6 +20,7 @@ class Settings(BaseSettings):
     classifier_model: str = "anthropic:claude-haiku-5-5"
     agent_model: str = "anthropic:claude-sonnet-5-5"
     poll_interval_seconds: int = 60
+    enable_auto_poller: bool = False
     dashboard_username: str = "admin"
     dashboard_password: str = ""
 
