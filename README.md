@@ -2,6 +2,8 @@
 
 > Simple help for everyday home and kitchen needs.
 
+![System Architecture](docs/images/customer_support_architecture.jpg)
+
 An end-to-end autonomous customer support automation system with an AI pipeline, safety guardrails, human escalation, and a modern React + shadcn/ui operational dashboard.
 
 ---
