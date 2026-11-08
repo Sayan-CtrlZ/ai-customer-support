@@ -17,5 +17,6 @@ RUN uv sync --locked --no-dev --no-install-project
 COPY app ./app
 COPY --from=dashboard /dashboard/dist ./dashboard/dist
 ENV PATH="/app/.venv/bin:$PATH"
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8080"]
+EXPOSE 8080
+CMD ["sh", "-c", "uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8080}"]
 
