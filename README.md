@@ -2,7 +2,7 @@
 
 > Simple help for everyday home and kitchen needs.
 
-![System Architecture](docs/images/customer_support_architecture.jpg)
+![System Architecture](docs/images/architecture_shadcn.png)
 
 An end-to-end autonomous customer support automation system with an AI pipeline, safety guardrails, human escalation, and a modern React + shadcn/ui operational dashboard.
 
@@ -13,8 +13,8 @@ An end-to-end autonomous customer support automation system with an AI pipeline,
 Neem & Teak is a home and kitchen brand selling products such as mixer grinders and flat-pack bookshelves. This system automates email customer support end-to-end:
 - Ingests customer support inquiries via the Gmail API.
 - Evaluates inbound messages against strict deterministic Python safety rules.
-- Classifies customer intent using lightweight language models (Claude 3.5 Haiku).
-- Retrieves relevant store policies and drafts factual responses using retrieval-augmented generation (Claude 3.5 Sonnet via Pydantic AI).
+- Classifies customer intent using lightweight language models (`CLASSIFIER_MODEL=anthropic:claude-haiku-5-5`).
+- Retrieves relevant store policies and drafts factual responses using retrieval-augmented generation (`AGENT_MODEL=anthropic:claude-sonnet-5-5` via Pydantic AI).
 - Automatically escalates edge cases, returns, and damages to human agents.
 - Assigns persistent multi-digit ticket references (`NT-10021`) for email thread tracking.
 - Provides a real-time operational dashboard for monitoring pipeline activity, reviewing ticket histories, and updating store knowledge base articles.
@@ -37,13 +37,13 @@ Neem & Teak is a home and kitchen brand selling products such as mixer grinders 
                                      v
                  +----------------------------------------+
                  |      Pydantic AI Classifier            |
-                 |      (Claude 3.5 Haiku)                |
+                 |    anthropic:claude-haiku-5-5          |
                  +-------------------+--------------------+
                                      |
                                      v
                  +----------------------------------------+
                  |       Pydantic AI Agent                |
-                 |       (Claude 3.5 Sonnet + RAG)        |
+                 |    anthropic:claude-sonnet-5-5         |
                  +-------+--------------------------+-----+
                          |                          |
                   [Action: Answer]           [Action: Escalate]
@@ -77,8 +77,8 @@ Neem & Teak is a home and kitchen brand selling products such as mixer grinders 
 - **Bounce Suppression**: Detects non-delivery reports (NDRs), delivery failure notices, and authentication alerts to prevent infinite response loops.
 
 ### 2. Multi-Stage AI Pipeline
-- **Classification Stage**: Uses Claude 3.5 Haiku for rapid intent classification across catalog domains (`mixer_grinders`, `bookshelves`, `returns_warranty`, `shipping`).
-- **Generation & Tool Retrieval Stage**: Uses Claude 3.5 Sonnet with Pydantic AI tools to fetch authoritative documentation directly from the PostgreSQL knowledge base.
+- **Classification Stage**: Uses `CLASSIFIER_MODEL=anthropic:claude-haiku-5-5` for rapid intent classification across catalog domains (`mixer_grinders`, `bookshelves`, `returns_warranty`, `shipping`).
+- **Generation & Tool Retrieval Stage**: Uses `AGENT_MODEL=anthropic:claude-sonnet-5-5` with Pydantic AI tools to fetch authoritative documentation directly from the PostgreSQL knowledge base.
 - **Rule-Based Routing**: Hard constraints dictate whether a proposal can be executed autonomously or requires manual staff review.
 
 ### 3. Human-in-the-Loop Escalation
@@ -100,7 +100,9 @@ Neem & Teak is a home and kitchen brand selling products such as mixer grinders 
 ## Technology Stack
 
 - **Backend**: Python 3.13, FastAPI, Pydantic AI, Psycopg 3, Uvicorn
-- **AI Models**: Anthropic Claude 3.5 Sonnet (Agent/RAG), Claude 3.5 Haiku (Classifier)
+- **AI Models**:
+  - Classifier Model: `anthropic:claude-haiku-5-5`
+  - Agent / RAG Model: `anthropic:claude-sonnet-5-5`
 - **Database**: PostgreSQL (Supabase) with connection pooling support
 - **Email Integration**: Google APIs (Gmail API v1 with OAuth2 refresh flow)
 - **Frontend**: React 19, TypeScript, Vite, Tailwind CSS v4, Radix UI, shadcn/ui
